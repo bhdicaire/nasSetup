@@ -37,6 +37,7 @@ setup: ## Initial Ubuntu Setup
 	sudo apt-add-repository —yes —update ppa:ansible/ansible
 	sudo apt install ansible
 	ansible-galaxy install -r requirements.yml
+	 pip3 install ansible-lint
 	echo "**********************************************"
 	echo "Intial Ubuntu Setup Completed"
 	echo "**********************************************"
