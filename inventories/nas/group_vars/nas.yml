@@ -1,0 +1,163 @@
+---
+##                       ._____.   .__
+##  _____    ____   _____|__\_ |__ |  |   ____             ____ _____    ______
+##  \__  \  /    \ /  ___/  || __ \|  | _/ __ \   ______  /    \\__  \  /  ___/
+##   / __ \|   |  \\___ \|  || \_\ \  |_\  ___/  /_____/ |   |  \/ __ \_\___ \
+##  (____  /___|  /____  >__||___  /____/\___  >         |___|  (____  /____  >
+##       \/     \/     \/        \/          \/               \/     \/     \/
+##     a n s i b l e - n a s      https://github.com/davestephens/ansible-nas
+
+# Add your all.yml config overrides to this file. See group_vars/all.yml for all possible settings.
+
+ansible_nas_hostname: nas
+ansible_nas_timezone: Etc/UTC 
+
+# Will be added to the docker group to give user command line access to docker
+ansible_nas_user: bhdicaire 
+
+# Your email and domain, used for Let's Encrypt SSL certs
+ansible_nas_email: certificates@dicaire.com
+
+# Applications will have subdomain SSL certificates created if Traefik is enabled, e.g. ansible-nas.<your-domain>, nextcloud.<your-domain>
+ansible_nas_domain: dicaire.com
+
+# The location where all shares will be created by default. Can be overridden on a per-share basis.
+# This path will be mounted to backup containers, Duplicati
+samba_shares_root: /big-data
+
+##
+### NFS
+##
+
+nfs_shares_root: /code
+
+##
+### Samba
+###
+
+books_root: "{{ samba_shares_root }}/ebooks"
+
+# Shares you want published over Samba.
+samba_shares:
+  - name: downloads
+    comment: 'Stuff downloaded'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ downloads_root }}"
+
+  - name: nas-everything 
+    comment: 'Stuff downloaded'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ samba_shares_root }}"
+
+  - name: movies
+    comment: 'Movies'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ movies_root }}"
+
+  - name: tv
+    comment: 'TV Episodes'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ tv_root }}"
+
+  - name: music
+    comment: 'Music'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ music_root }}"
+
+  - name: podcasts
+    comment: 'Podcasts'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ podcasts_root }}"
+
+  - name: dump
+    comment: 'File dump'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ samba_shares_root }}/dump"
+
+  - name: games
+    comment: 'Games'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ samba_shares_root }}/games"
+
+  - name: photos
+    comment: 'Pictures'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ photos_root }}"
+
+  - name: ebooks
+    comment: 'eBooks'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ books_root }}"
+
+  - name: comics
+    comment: 'Comics'
+    guest_ok: yes
+    public: yes
+    writable: yes
+    browseable: yes
+    path: "{{ comics_root }}"
+
+## Enabled Applications
+heimdall_enabled: true
+avahi_enabled: false
+portainer_enabled: false 
+glances_enabled: true
+calibre_enabled: true 
+cloudflare_ddns_enabled: true 
+gitea_enabled: true
+cloudcmd_enabled: true
+plex_enabled: false 
+traefik_enabled: true 
+
+###
+### Time Machine
+###
+
+timemachine_enabled: true
+timemachine_data_directory: "{{ docker_home }}/timemachine"
+timemachine_volume_size_limit: "0"
+timemachine_password: timemachine
+timemachine_share_name: timeMachine 
+timemachine_log_level: error
+timemachine_port: "10445"
+
+###
+### UniFi Network Application
+###
+unifi_data_directory: "{{ docker_home }}/unifi"
+unifi_network_name: "unifi"
+unifi_user: "systemd-coredump"
+unifi_group: "systemd-coredump"
+unifi_memory: 1g
+unifi_mongodb_memory: 1g
+unifi_timezone: "{{ ansible_nas_timezone }}"

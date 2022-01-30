@@ -1,0 +1,124 @@
+---
+- hosts: all
+
+  pre_tasks:
+    - import_tasks: tasks/users.yml
+      tags: users
+
+  roles:
+
+    ###
+    ### Requirements
+    ###
+    - role: bertvv.samba
+      tags:
+        - samba
+        - skip_ansible_lint
+
+    - role: geerlingguy.nfs
+      tags:
+        - nfs
+        - skip_ansible_lint
+
+    - role: geerlingguy.docker
+      tags:
+        - docker
+        - skip_ansible_lint
+
+
+    ###
+    ### Ansible-NAS Roles
+    ###
+    - role: ansible-nas-general
+      tags:
+        - ansible-nas-general
+        - ansible-nas
+
+    - role: ansible-nas-docker
+      tags:
+        - ansible-nas-docker
+        - ansible-nas
+
+
+    ###
+    ### Applications
+    ###
+
+
+
+
+    - role: glances
+      tags:
+        - glances
+      when: (glances_enabled | default(False))
+
+
+    - role: heimdall
+      tags:
+        - heimdall
+      when: (heimdall_enabled | default(False))
+
+    - role: netbootxyz
+      tags:
+        - netbootxyz
+      when: (netbootxyz_enabled | default(False))
+
+    - role: netdata
+      tags:
+        - netdata
+      when: (netdata_enabled | default(False))
+
+    - role: nextcloud
+      tags:
+        - nextcloud
+      when: (nextcloud_enabled | default(False))
+
+    - role: nzbget
+      tags:
+        - nzbget
+      when: (nzbget_enabled | default(False))
+
+    - role: organizr
+      tags:
+        - organizr
+      when: (organizr_enabled | default(False))
+
+    - role: portainer
+      tags:
+        - portainer
+      when: (portainer_enabled | default(False))
+
+    - role: syncthing
+      tags:
+        - syncthing
+      when: (syncthing_enabled | default(False))
+
+    - role: traefik
+      tags:
+        - traefik
+      when: (traefik_enabled | default(False))
+
+    - role: watchtower
+      tags:
+        - watchtower
+      when: (watchtower_enabled | default(False))
+
+    - role: unifi
+      tags:
+        - unifi
+      when: (unifi_enabled | default(False))
+
+  tasks:
+
+    - import_tasks: tasks/timemachine.yml
+      when: (timemachine_enabled | default(False))
+      tags: timemachine
+
+    - import_tasks: tasks/stats.yml
+      when: (stats_enabled | default(False))
+      tags: stats
+
+    - import_tasks: tasks/calibre.yml
+      when: (calibre_enabled | default(False))
+      tags: calibre
+
